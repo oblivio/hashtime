@@ -1,5 +1,5 @@
 /*
- * HashTime v1.0.1
+ * HashTime v1.0.2
  * 
  * */
 function HashTime($,Handlebars){
@@ -33,7 +33,6 @@ HashTime.prototype._init = function(){
 		if(tmpHash == ''){
 			tmpHash = 'index';
 		}
-		window.location.hash = tmpHash;
 		HashTime.currenthash = window.location.hash;
 		HashTime.landinghash = window.location.hash;
 	}else{
@@ -66,6 +65,17 @@ HashTime.prototype.init = function(){
 	//external init()
 	var HashTime = this;
 	HashTime.setAppTemplate();
+	window.location.hash = '';
+	var nohash = String(HashTime.currenthash).replace('#','');
+	console.log('nohash',nohash);
+	if(nohash == ''){
+		nohash = String(HashTime.landingHTMLPage).replace('.html','');
+	}
+	if(nohash == ''){
+		nohash = 'index';
+	}
+	window.location.hash = nohash;
+	
 };
 HashTime.prototype._GET = function(paramKey){
 	var HashTime = this;
@@ -325,8 +335,7 @@ var HT = false;
 		
 		var nohash = String(HT.currenthash).replace('#','');
 		if(nohash == ''){
-			console.log('no route specified');
-			
+			console.log('no route specified');	
 		}else{
 			//HashTime :)
 			HT.render();
