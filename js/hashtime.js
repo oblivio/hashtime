@@ -1,3 +1,7 @@
+/*
+ * HashTime v1.0.1
+ * 
+ * */
 function HashTime($,Handlebars){
 	//trackers
 	this.landinghash = '';
@@ -62,7 +66,6 @@ HashTime.prototype.init = function(){
 	//external init()
 	var HashTime = this;
 	HashTime.setAppTemplate();
-	HashTime.render();
 };
 HashTime.prototype._GET = function(paramKey){
 	var HashTime = this;
@@ -319,8 +322,15 @@ var HT = false;
 		console.log('hash transition ',oldHash,newHash);
 		HT.lasthash = oldHash;
 		HT.currenthash = newHash;
-		HT.render();
 		
+		var nohash = String(HT.currenthash).replace('#','');
+		if(nohash == ''){
+			console.log('no route specified');
+			
+		}else{
+			//HashTime :)
+			HT.render();
+		}	
 	};
 	//http://stackoverflow.com/questions/9339865/get-the-hashchange-event-to-work-in-all-browsers-including-ie7#9339972
 	//function hashchange  is assumed to exist. This function will fire on hashchange
