@@ -1,6 +1,8 @@
 # hashtime
 
-hashtime v1.0.1
+hashtime v1.0.2
+
+hashtime is a logic-agnostic templating framework that takes care of routing and rendering.
 
 Sample usage:
 
