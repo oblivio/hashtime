@@ -3,6 +3,8 @@
  * 
  * */
 function HashTime($,Handlebars){
+	//config
+	this.hashPrefix = '/';
 	//trackers
 	this.landinghash = '';
 	this.lasthash = '';
@@ -44,11 +46,13 @@ HashTime.prototype._init = function(){
 		var trueHash = hashData[0];
 		var trueQuery = "";
 		var hashHasQuery = false;
+		
 		if(typeof hashData[1] !== 'undefined'){
 			trueQuery = hashData[1];
 			hashHasQuery = true;
 		}
 		if(!hashHasQuery){
+			console.log('clean hash');
 			HashTime.landinghash = window.location.hash;
 			HashTime.currenthash = window.location.hash;
 		}else{
@@ -56,6 +60,7 @@ HashTime.prototype._init = function(){
 	    	location.href = HashTime.landingHTMLPage + "?" +trueQuery+trueHash;
 	    	return false;
 		}
+		
 		
 	}
 	HashTime.URLParameters = HashTime._GET();
@@ -67,14 +72,16 @@ HashTime.prototype.init = function(){
 	HashTime.setAppTemplate();
 	window.location.hash = '';
 	var nohash = String(HashTime.currenthash).replace('#','');
+	nohash = String(nohash).replace(HashTime.hashPrefix,'');
+	
 	console.log('nohash',nohash);
 	if(nohash == ''){
 		nohash = String(HashTime.landingHTMLPage).replace('.html','');
 	}
 	if(nohash == ''){
-		nohash = 'index';
+		nohash =  +'index';
 	}
-	window.location.hash = nohash;
+	window.location.hash = HashTime.hashPrefix  + nohash;
 	
 };
 HashTime.prototype._GET = function(paramKey){
@@ -114,12 +121,15 @@ HashTime.prototype.imagePreload = function(){
 	
 };
 HashTime.prototype.render = function(){
+	window.scrollTo(0,0);
 	var HashTime = this;
 	var tplData = HashTime.sharedtemplatedata;
 	
 	var prefix = "is-";
 	var tplIs = window.location.hash;
 	var nohash = String(tplIs).replace('#','');
+	nohash = String(nohash).replace(HashTime.hashPrefix,'');
+	
 	if(nohash.length == 0){
 		nohash = String(HashTime.landingHTMLPage).replace('.html','');
 	}
@@ -218,6 +228,7 @@ HashTime.prototype._setPageTitle = function(){
 	var HashTime = this;
 	var newTitle = '';
 	var nohash = String(HashTime.currenthash).replace('#','');
+	nohash = String(nohash).replace(HashTime.hashPrefix,'');
 	if(nohash == ''){
 		nohash = 'index';
 	}
