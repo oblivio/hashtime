@@ -74,12 +74,11 @@ HashTime.prototype.init = function(){
 	var nohash = String(HashTime.currenthash).replace('#','');
 	nohash = String(nohash).replace(HashTime.hashPrefix,'');
 	
-	console.log('nohash',nohash);
 	if(nohash == ''){
 		nohash = String(HashTime.landingHTMLPage).replace('.html','');
 	}
 	if(nohash == ''){
-		nohash =  +'index';
+		nohash =  'index';
 	}
 	window.location.hash = HashTime.hashPrefix  + nohash;
 	
