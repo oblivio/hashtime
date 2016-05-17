@@ -1,6 +1,6 @@
 # hashtime
 
-hashtime v1.0.0
+hashtime v1.0.1
 
 Sample usage:
 
