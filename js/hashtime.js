@@ -343,14 +343,20 @@ var HT = false;
 		HT.lasthash = oldHash;
 		HT.currenthash = newHash;
 		
+		if(HT.lasthash == ''){
+			HT.lasthash = HT.currenthash;
+		}
 		var nohash = String(HT.currenthash).replace('#','');
-		console.log('nohash',nohash);
-		if(nohash == ''){
-			console.log('no route specified',nohash);	
+		nohash = String(nohash).replace(HT.suffixPrefix,'');
+		var oldnohash = String(HT.lasthash).replace('#','');
+		oldnohash = String(oldnohash).replace(HT.suffixPrefix,'');
+		console.log('new,old',nohash,oldnohash);
+		if(oldnohash == nohash){
+			console.log('dont double render','already rendered');
 		}else{
-			//HashTime :)
 			HT.render();
-		}	
+		}
+		
 	};
 	//http://stackoverflow.com/questions/9339865/get-the-hashchange-event-to-work-in-all-browsers-including-ie7#9339972
 	//function hashchange  is assumed to exist. This function will fire on hashchange
