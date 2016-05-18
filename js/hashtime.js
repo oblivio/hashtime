@@ -35,8 +35,8 @@ HashTime.prototype._init = function(){
 		if(tmpHash == ''){
 			tmpHash = 'index';
 		}
-		HashTime.currenthash = window.location.hash;
-		HashTime.landinghash = window.location.hash;
+		HashTime.currenthash = HT.hashPrefix + tmpHash;
+		HashTime.landinghash = HashTime.currenthash;
 	}else{
 		//malformed URL where hash contains queryString
 		//Ex: index.html#example-one?custom_param=A
@@ -53,11 +53,11 @@ HashTime.prototype._init = function(){
 		}
 		if(!hashHasQuery){
 			console.log('clean hash');
-			HashTime.landinghash = window.location.hash;
-			HashTime.currenthash = window.location.hash;
+			HashTime.landinghash = trueHash;
+			HashTime.currenthash = trueHash;
 		}else{
 			//fix URL request //forces refresh	
-	    	location.href = HashTime.landingHTMLPage + "?" +trueQuery+trueHash;
+	    	location.href = HashTime.landingHTMLPage + "?" +trueQuery+HT.hashPrefix+trueHash;
 	    	return false;
 		}
 		
@@ -344,8 +344,9 @@ var HT = false;
 		HT.currenthash = newHash;
 		
 		var nohash = String(HT.currenthash).replace('#','');
+		console.log('nohash',nohash);
 		if(nohash == ''){
-			console.log('no route specified');	
+			console.log('no route specified',nohash);	
 		}else{
 			//HashTime :)
 			HT.render();
