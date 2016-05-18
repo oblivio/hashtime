@@ -35,8 +35,9 @@ HashTime.prototype._init = function(){
 		if(tmpHash == ''){
 			tmpHash = 'index';
 		}
-		HashTime.currenthash = HT.hashPrefix + tmpHash;
-		HashTime.landinghash = HashTime.currenthash;
+		window.location.hash = HT.hashPrefix + tmpHash;
+		HashTime.landinghash = window.location.hash ;
+		HashTime.currenthash = window.location.hash ;
 	}else{
 		//malformed URL where hash contains queryString
 		//Ex: index.html#example-one?custom_param=A
@@ -44,6 +45,7 @@ HashTime.prototype._init = function(){
 		
 		var hashData = String(window.location.hash).split('?');
 		var trueHash = hashData[0];
+		trueHash = String(trueHash).replace('#','');
 		var trueQuery = "";
 		var hashHasQuery = false;
 		
@@ -52,9 +54,13 @@ HashTime.prototype._init = function(){
 			hashHasQuery = true;
 		}
 		if(!hashHasQuery){
-			console.log('clean hash');
+			console.log('clean hash',trueHash);
+			if(trueHash == HashTime.hashPrefix){
+				trueHash = HashTime.hashPrefix + 'index';
+			}
 			HashTime.landinghash = trueHash;
 			HashTime.currenthash = trueHash;
+			window.location.hash = trueHash;
 		}else{
 			//fix URL request //forces refresh	
 	    	location.href = HashTime.landingHTMLPage + "?" +trueQuery+HT.hashPrefix+trueHash;
@@ -70,18 +76,8 @@ HashTime.prototype.init = function(){
 	//external init()
 	var HashTime = this;
 	HashTime.setAppTemplate();
-	window.location.hash = '';
-	var nohash = String(HashTime.currenthash).replace('#','');
-	nohash = String(nohash).replace(HashTime.hashPrefix,'');
-	
-	if(nohash == ''){
-		nohash = String(HashTime.landingHTMLPage).replace('.html','');
-	}
-	if(nohash == ''){
-		nohash =  'index';
-	}
-	window.location.hash = HashTime.hashPrefix  + nohash;
-	
+	window.location.hash = HashTime.landinghash;
+	HashTime.render();
 };
 HashTime.prototype._GET = function(paramKey){
 	var HashTime = this;
@@ -125,13 +121,14 @@ HashTime.prototype.render = function(){
 	var tplData = HashTime.sharedtemplatedata;
 	
 	var prefix = "is-";
-	var tplIs = window.location.hash;
+	var tplIs = HashTime.currenthash;
 	var nohash = String(tplIs).replace('#','');
 	nohash = String(nohash).replace(HashTime.hashPrefix,'');
 	
 	if(nohash.length == 0){
 		nohash = String(HashTime.landingHTMLPage).replace('.html','');
 	}
+	
 	if(typeof HashTime.templatedata[nohash] !== 'undefined'){
 		console.log('HashTime.templatedata[nohash]',HashTime.templatedata[nohash]);
 		tplData = jQuery.extend({},HashTime.sharedtemplatedata,HashTime.templatedata[nohash]);
@@ -343,16 +340,23 @@ var HT = false;
 		HT.lasthash = oldHash;
 		HT.currenthash = newHash;
 		
+		if(HT.currenthash == ''){
+			window.location.hash = HT.hashPrefix + 'index';
+		}
+		
 		if(HT.lasthash == ''){
 			HT.lasthash = HT.currenthash;
 		}
+		
 		var nohash = String(HT.currenthash).replace('#','');
 		nohash = String(nohash).replace(HT.suffixPrefix,'');
 		var oldnohash = String(HT.lasthash).replace('#','');
 		oldnohash = String(oldnohash).replace(HT.suffixPrefix,'');
 		console.log('new,old',nohash,oldnohash);
-		if(oldnohash == nohash){
-			console.log('dont double render','already rendered');
+		if(nohash === oldnohash){
+			console.log('dont rerender');
+		}else if(nohash == HT.hashPrefix || nohash == ''){
+			window.location.hash = HT.hashPrefix + 'index';
 		}else{
 			HT.render();
 		}
