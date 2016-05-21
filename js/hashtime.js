@@ -6,6 +6,7 @@ function HashTime($,Handlebars){
 	//config
 	this.hashPrefix = '/';
 	//trackers
+	this.renderedTPL = '';
 	this.landinghash = '';
 	this.lasthash = '';
 	this.currenthash = '';
@@ -143,10 +144,13 @@ HashTime.prototype.render = function(){
 	
 	HashTime._setPageTitle();
 	
-	$('body').html(HashTime.template(tplData),function(){
-		console.log('render!',tplData);
-		HashTime.onDOMReady();
-	});
+	if(HashTime.renderedTPL != nohash){
+		$('body').html(HashTime.template(tplData),function(){
+			console.log('render!',tplData);
+			HashTime.renderedTPL = nohash;
+			HashTime.onDOMReady();
+		});
+	}
 	
 };
 HashTime.prototype._query = function(blockArrIn){
@@ -330,59 +334,14 @@ var HT = false;
 		// make sure chaining is not broken
 		return ret;
 	};
-
-	HT = new HashTime();
 	
-	var hashChange = function(changeObj){
-		var oldHash = String(changeObj.oldURL).replace(/^.*?(#|$)/,'');
-		var newHash = String(changeObj.newURL).replace(/^.*?(#|$)/,'');
-		console.log('hash transition ',oldHash,newHash);
-		HT.lasthash = oldHash;
-		HT.currenthash = newHash;
-		
-		if(HT.currenthash == ''){
-			window.location.hash = HT.hashPrefix + 'index';
-		}
-		
-		if(HT.lasthash == ''){
-			HT.lasthash = HT.currenthash;
-		}
-		
-		var nohash = String(HT.currenthash).replace('#','');
-		nohash = String(nohash).replace(HT.suffixPrefix,'');
-		var oldnohash = String(HT.lasthash).replace('#','');
-		oldnohash = String(oldnohash).replace(HT.suffixPrefix,'');
-		console.log('new,old',nohash,oldnohash);
-		if(nohash === oldnohash){
-			console.log('dont rerender');
-		}else if(nohash == HT.hashPrefix || nohash == ''){
-			window.location.hash = HT.hashPrefix + 'index';
-		}else{
-			HT.render();
-		}
-		
-	};
-	//http://stackoverflow.com/questions/9339865/get-the-hashchange-event-to-work-in-all-browsers-including-ie7#9339972
-	//function hashchange  is assumed to exist. This function will fire on hashchange
-	if (!('onhashchange' in window)) {
-	    var oldHref = location.href;
-	    setInterval(function() {
-	        var newHref = location.href;
-	        if (oldHref !== newHref) {
-	            var _oldHref = oldHref;
-	            oldHref = newHref;
-	            hashChange.call(window, {
-	                'type': 'hashchange',
-	                'newURL': newHref,
-	                'oldURL': _oldHref
-	            });
-	        }
-	    }, 100);
-	} else if (window.addEventListener) {
-	    window.addEventListener("hashchange", hashChange, false);
-	}
-	else if (window.attachEvent) {
-	    window.attachEvent("onhashchange", hashChange);    
-	}
+	HT = new HashTime();
+	$(window).on('hashchange',function(e){
+		console.log('lasthash',HT.lasthash);
+		HT.lasthash = window.location.hash;
+		HT.currenthash = window.location.hash;
+		console.log('currenthash',HT.currenthash);
+		HT.render();
+	});
 	HT._init();
 }(jQuery,Handlebars));
