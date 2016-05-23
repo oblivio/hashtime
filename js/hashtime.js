@@ -64,7 +64,8 @@ HashTime.prototype._init = function(){
 			window.location.hash = trueHash;
 		}else{
 			//fix URL request //forces refresh	
-	    	location.href = HashTime.landingHTMLPage + "?" +trueQuery+HT.hashPrefix+trueHash;
+			trueHash = String(trueHash).replace(HT.hashPrefix,'');
+	    	location.href = HashTime.landingHTMLPage + "?" +trueQuery+"#"+HT.hashPrefix+trueHash;
 	    	return false;
 		}
 		
@@ -356,6 +357,7 @@ var HT = false;
 		
 		var cleanhash = String(window.location.hash).replace('#','');
 		cleanhash = cleanhash.replace(HT.hashPrefix,'');
+		
 		
 		if(jQuery.inArray(cleanhash, HT.partials) !== -1){
 			
