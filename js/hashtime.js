@@ -8,7 +8,7 @@ function HashTime($,Handlebars){
 	//trackers
 	this.renderedTPL = '';
 	this.landinghash = '';
-	this.lasthash = '';
+	this.lasthash = [];
 	this.currenthash = '';
 	this.landingHTMLPage='';
 	//URL Data
@@ -318,6 +318,16 @@ HashTime.prototype.setLanding = function(){
 	HashTime.landingHTMLPage = fileName;
 	
 };
+HashTime.prototype.navBack = function(){
+	var HashTime = this;
+	
+	var routeIndex = HashTime.lasthash.indexOf(window.location.hash);
+	if(routeIndex){
+		console.log('found route! now lets try to go back!',routeIndex,history);
+		HashTime.lasthash.splice(routeIndex,1);
+	}
+	window.location.hash = HashTime.lasthash.pop();
+};
 var HT = false;
 (function($){
 	//http://stackoverflow.com/questions/11826484/jquery-event-after-html-function
@@ -336,12 +346,26 @@ var HT = false;
 	};
 	
 	HT = new HashTime();
+	HT.lasthash.push( window.location.hash );
+	
 	$(window).on('hashchange',function(e){
 		console.log('lasthash',HT.lasthash);
-		HT.lasthash = window.location.hash;
+		
+		HT.lasthash.push( window.location.hash );
 		HT.currenthash = window.location.hash;
-		console.log('currenthash',HT.currenthash);
-		HT.render();
+		
+		var cleanhash = String(window.location.hash).replace('#','');
+		cleanhash = cleanhash.replace(HT.hashPrefix,'');
+		
+		if(jQuery.inArray(cleanhash, HT.partials) !== -1){
+			
+			HT.render();
+		}else{
+			//default to index if unrecognized route
+			console.log('partial not found - default to index');
+			window.location.hash = "#"+HT.hashPrefix+"index";
+			
+		}
 	});
 	HT._init();
 }(jQuery,Handlebars));
