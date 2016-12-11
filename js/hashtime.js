@@ -1,5 +1,5 @@
 /*
- * HashTime v1.0.3
+ * HashTime v1.0.4
  * 
  * */
 function HashTime($,Handlebars){
@@ -8,7 +8,8 @@ function HashTime($,Handlebars){
 	//trackers
 	this.renderedTPL = '';
 	this.landinghash = '';
-	this.lasthash = [];
+	this.lasthash='';
+	this.lasthashes = [];
 	this.currenthash = '';
 	this.landingHTMLPage='';
 	//URL Data
@@ -335,12 +336,13 @@ HashTime.prototype.navBack = function(){
 		return resultArray;
 	};
 	
-	var routeIndex = HashTime.lasthash.indexOf(window.location.hash);
+	var routeIndex = HashTime.lasthashes.indexOf(window.location.hash);
 	if(routeIndex){
-		console.log('found route! now lets try to go back!',HashTime.lasthash,routeIndex,history);
-		HashTime.lasthash = removeItem(window.location.hash,HashTime.lasthash);
+		console.log('found route! now lets try to go back!',HashTime.lasthashes,routeIndex,history);
+		HashTime.lasthashes = removeItem(window.location.hash,HashTime.lasthashes);
+		HashTime.lasthash = window.location.hash;
 	}
-	window.location.hash = HashTime.lasthash.pop();
+	window.location.hash = HashTime.lasthashes.pop();
 };
 var HT = false;
 (function($){
@@ -360,12 +362,12 @@ var HT = false;
 	};
 	
 	HT = new HashTime();
-	HT.lasthash.push( window.location.hash );
+//	HT.lasthashes.push( window.location.hash );
 	
 	$(window).on('hashchange',function(e){
-		console.log('lasthash',HT.lasthash);
+		console.log('lasthashes',HT.lasthashes);
 		
-		HT.lasthash.push( window.location.hash );
+		HT.lasthashes.push( window.location.hash );
 		HT.currenthash = window.location.hash;
 		
 		var cleanhash = String(window.location.hash).replace('#','');
