@@ -362,7 +362,7 @@ var HT = false;
 	};
 	
 	HT = new HashTime();
-//	HT.lasthashes.push( window.location.hash );
+	HT.lasthashes.push( window.location.hash );
 	
 	$(window).on('hashchange',function(e){
 		console.log('lasthashes',HT.lasthashes);
