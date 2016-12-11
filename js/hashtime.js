@@ -1,5 +1,5 @@
 /*
- * HashTime v1.0.2
+ * HashTime v1.0.3
  * 
  * */
 function HashTime($,Handlebars){
@@ -36,9 +36,7 @@ HashTime.prototype._init = function(){
 		if(tmpHash == ''){
 			tmpHash = 'index';
 		}
-		//avoids infinite back-trap
-		//"overwrite" record
-		window.location.replace("#"+HT.hashPrefix + tmpHash);
+		window.location.hash = HT.hashPrefix + tmpHash;
 		HashTime.landinghash = window.location.hash ;
 		HashTime.currenthash = window.location.hash ;
 	}else{
@@ -175,7 +173,7 @@ HashTime.prototype._query = function(blockArrIn){
 HashTime.prototype._query2array = function(){
 	var HashTime = this;
 	var vars = {};
-	console.log('MayflowerApp.URLQuery',HashTime._query());
+	console.log('URLQuery',HashTime._query());
 	String(HashTime._query()).replace( 
 		/[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 		function( m, key, value ) { // callback
@@ -324,10 +322,18 @@ HashTime.prototype.setLanding = function(){
 HashTime.prototype.navBack = function(){
 	var HashTime = this;
 	
+	var removeItem = function(item2remove,arr){
+		var resultArray = [];
+		resultArray = $.grep(arr,function(val){
+			return val != item2remove;
+		});
+		return resultArray;
+	};
+	
 	var routeIndex = HashTime.lasthash.indexOf(window.location.hash);
 	if(routeIndex){
-		console.log('found route! now lets try to go back!',routeIndex,history);
-		HashTime.lasthash.splice(routeIndex,1);
+		console.log('found route! now lets try to go back!',HashTime.lasthash,routeIndex,history);
+		HashTime.lasthash = removeItem(window.location.hash,HashTime.lasthash);
 	}
 	window.location.hash = HashTime.lasthash.pop();
 };
