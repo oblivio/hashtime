@@ -370,6 +370,8 @@ var HT = false;
 		HT.lasthashes.push( window.location.hash );
 		HT.currenthash = window.location.hash;
 		
+//		HT.lasthash = window.location.hash;
+		
 		var cleanhash = String(window.location.hash).replace('#','');
 		cleanhash = cleanhash.replace(HT.hashPrefix,'');
 		
