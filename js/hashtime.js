@@ -36,9 +36,14 @@ HashTime.prototype._init = function(){
 		if(tmpHash == ''){
 			tmpHash = 'index';
 		}
-		window.location.hash = HT.hashPrefix + tmpHash;
+		//avoids infinite back-trap
+		//"overwrite" record
+		
+//		window.location.hash = HT.hashPrefix + tmpHash;
 		HashTime.landinghash = window.location.hash ;
 		HashTime.currenthash = window.location.hash ;
+		
+		window.location.replace("#"+HT.hashPrefix + tmpHash);
 	}else{
 		//malformed URL where hash contains queryString
 		//Ex: index.html#example-one?custom_param=A
