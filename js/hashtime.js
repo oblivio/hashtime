@@ -41,8 +41,8 @@ HashTime.prototype._init = function(){
 		//"overwrite" record
 		
 //		window.location.hash = HT.hashPrefix + tmpHash;
-		HashTime.landinghash = window.location.hash ;
-		HashTime.currenthash = window.location.hash ;
+		HashTime.landinghash = tmpHash ;
+		HashTime.currenthash = tmpHash ;
 		
 		window.location.replace("#"+HT.hashPrefix + tmpHash);
 	}else{
