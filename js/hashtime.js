@@ -195,7 +195,7 @@ HashTime.prototype._query2array = function(){
 };
 //Helper Functions
 HashTime.prototype.isTouchDevice = function(){
-	 return 'ontouchstart' in window; 
+	 return 'ontouchstart' in window || navigator.maxTouchPoints; 
 };
 HashTime.prototype._registerPartial = function(partialID){
 	if(partialID && $("[data-template-name='"+partialID+"']").length > 0){
